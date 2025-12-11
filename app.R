@@ -36,19 +36,14 @@ safe_read_gpkg <- function(path, layer = NULL) {
   }
 }
 
-a <- st_read(ageb_fp, 
-#        layer = layer, 
-        quiet = TRUE) #%>% st_transform(4326)
-
-a %>% st_transform(4326)
 # Rutas de datos
 ageb_fp <- "data/processed/ageb_factibilidad.gpkg"
 denue_fp <- "data/processed/denue_salud.gpkg"
 egresos_fp <- "data/processed/egresos_all.csv"
 delitos_fp <- "data/processed/delitos_manzanillo.csv"
 
-ageb <- st_read(ageb_fp, quiet = TRUE) %>% st_transform(4326)
-denue <- st_read(denue_fp, quiet = TRUE) %>% st_transform(4326)
+ageb <- safe_read_gpkg(ageb_fp)
+denue <- safe_read_gpkg(denue_fp)
 
 if (file.exists(egresos_fp)) {
   egresos <- read_csv(egresos_fp, show_col_types = FALSE)
