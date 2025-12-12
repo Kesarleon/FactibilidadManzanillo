@@ -33,6 +33,7 @@ mod_map_ui_body <- function(id) {
 # Servidor del módulo Mapa
 mod_map_server <- function(id, ageb, denue, egresos, has_osrm) {
   moduleServer(id, function(input, output, session) {
+    ns <- session$ns
 
     # Actualizar inputs de rango/opciones basados en datos reales
     observe({
