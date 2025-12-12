@@ -101,6 +101,12 @@ mod_map_server <- function(id, ageb, denue, egresos, has_osrm) {
       if (is.null(click)) return()
       lon <- click$lng; lat <- click$lat
       selected_pt(c(lon=lon, lat=lat))
+
+      # Agregar marcador visual
+      leafletProxy(ns("map")) %>%
+        clearGroup("selected_pt") %>%
+        addMarkers(lng = lon, lat = lat, group = "selected_pt")
+
       output$info_selected <- renderUI({
         HTML(paste0("Punto seleccionado: <b>", round(lat,6), ", ", round(lon,6), "</b><br>",
                     "Presiona 'Calcular isócronas' para estimar zonas de 15/30 min."))

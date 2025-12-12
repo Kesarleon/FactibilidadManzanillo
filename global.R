@@ -60,3 +60,16 @@ if (is.null(denue)) {
   denue$Nombre <- paste0("Estab ", seq_len(nrow(denue)))
   denue$Clase_actividad <- sample(c("Farmacia","Clínica","Consultorio","Laboratorio"), nrow(denue), replace = TRUE)
 }
+
+# Si egresos es NULL, generar dummies
+if (is.null(egresos)) {
+  message("Generando datos dummy (Egresos)...")
+  bounds <- st_bbox(ageb)
+  egresos <- data.frame(
+    CLUES = paste0("CLUES_DUMMY_", 1:50),
+    longitud = runif(50, bounds["xmin"], bounds["xmax"]),
+    latitud = runif(50, bounds["ymin"], bounds["ymax"]),
+    TOTAL_EGRESOS = sample(10:1000, 50, replace = TRUE),
+    ano = sample(2018:2022, 50, replace = TRUE)
+  )
+}
