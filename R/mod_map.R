@@ -136,7 +136,7 @@ mod_map_server <- function(id, ageb, denue, egresos, has_osrm) {
       iso_sf(iso_res)
 
       # Dibujar en mapa
-      leafletProxy("map") %>% clearGroup("isochrones")
+      leafletProxy(ns("map")) %>% clearGroup("isochrones")
       if (input$show_iso && !is.null(iso_res)) {
         # osrm returns field 'min' or 't' depending; unify
         if ("min" %in% names(iso_res)) {
