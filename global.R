@@ -56,14 +56,18 @@ if (is.null(ageb)) {
   bbox <- st_as_sfc(st_bbox(c(xmin=-104.45, ymin=19.00, xmax=-104.20, ymax=19.20), crs=4326))
   ageb <- st_make_grid(bbox, n = c(6,6)) %>% st_as_sf() %>%
     mutate(CVEGEO = paste0("06007", row_number()),
-           poblacion = sample(100:3000, length(.), replace = TRUE)) %>%
+           POBTOT = sample(100:3000, length(.), replace = TRUE)) %>%
     st_set_geometry("geometry")
-  ageb$densidad <- ageb$poblacion / as.numeric(st_area(ageb)/1e6)
+  ageb$densidad <- ageb$POBTOT / as.numeric(st_area(ageb)/1e6)
   ageb$score_demanda <- scales::rescale(ageb$densidad) + runif(nrow(ageb),0,1)
 }
 
-ageb <- ageb %>% mutate(label = paste0("AGEB: ", ifelse(!is.null(.data$CVEGEO), CVEGEO, row_number()),
-                                       "<br>Pob: ", ifelse(!is.null(.data$POBTOT), POBTOT, "NA")))
+# Ensure required columns exist to avoid crashes
+if (!"POBTOT" %in% names(ageb)) ageb$POBTOT <- NA
+if (!"CVEGEO" %in% names(ageb)) ageb$CVEGEO <- NA
+
+ageb <- ageb %>% mutate(label = paste0("AGEB: ", ifelse(!is.na(CVEGEO), CVEGEO, row_number()),
+                                       "<br>Pob: ", ifelse(!is.na(POBTOT), POBTOT, "NA")))
 
 # si denue está vacío, crear dummies
 if (is.null(denue)) {
