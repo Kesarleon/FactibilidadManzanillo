@@ -73,7 +73,7 @@ ageb <- ageb %>% mutate(label = paste0("AGEB: ", ifelse(!is.na(CVEGEO), CVEGEO, 
 if (is.null(denue)) {
   message("Generando puntos DENUE dummy...")
   pts <- st_sample(ageb, size = 300)
-  denue <- st_as_sf(data.frame(pt = 1:length(pts)), geometry = unlist(pts))
+  denue <- st_sf(data.frame(pt = 1:length(pts)), geometry = pts)
   denue$Nombre <- paste0("Estab ", seq_len(nrow(denue)))
   denue$Clase_actividad <- sample(c("Farmacia","Clínica","Consultorio","Laboratorio"), nrow(denue), replace = TRUE)
 }
