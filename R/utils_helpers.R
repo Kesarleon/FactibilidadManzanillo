@@ -1,10 +1,10 @@
 # R/utils_helpers.R
 
 # Helper: carga segura de datos (si no existen, crea dummies)
-safe_read_gpkg <- function(path, layer = NULL) {
+safe_read_gpkg <- function(path) {
   if (file.exists(path)) {
     tryCatch({
-      st_read(path, layer = layer, quiet = TRUE) %>% st_transform(4326)
+      st_read(path, quiet = TRUE) %>% st_transform(4326)
     }, error = function(e){
       message("Error leyendo ", path, ": ", e$message)
       NULL
