@@ -13,7 +13,14 @@ library(DT)
 # Opcional: osrm para isócronas
 has_osrm <- requireNamespace("osrm", quietly = TRUE)
 
-# Nota: R/utils_helpers.R se carga automáticamente antes de global.R
+# Ensure helper functions are available
+# R/utils_helpers.R is usually sourced automatically by Shiny (>= 1.5.0),
+# but we explicitly source it if safe_read_gpkg is missing to be robust across environments.
+if (!exists("safe_read_gpkg")) {
+  if (file.exists("R/utils_helpers.R")) {
+    source("R/utils_helpers.R")
+  }
+}
 
 # Rutas de datos
 ageb_fp <- "data/processed/ageb_factibilidad.gpkg"
@@ -21,18 +28,24 @@ denue_fp <- "data/processed/denue_salud.gpkg"
 egresos_fp <- "data/processed/egresos_all.csv"
 delitos_fp <- "data/processed/delitos_manzanillo.csv"
 
-# Cargar datos
-ageb <- safe_read_gpkg(ageb_fp)
-denue <- safe_read_gpkg(denue_fp)
+# Cargar datos con manejo de errores
+tryCatch({
+  ageb <- safe_read_gpkg(ageb_fp)
+  denue <- safe_read_gpkg(denue_fp)
+}, error = function(e) {
+  message("Critical error loading primary data: ", e$message)
+  ageb <- NULL
+  denue <- NULL
+})
 
 if (file.exists(egresos_fp)) {
-  egresos <- read_csv(egresos_fp, show_col_types = FALSE)
+  egresos <- tryCatch(read_csv(egresos_fp, show_col_types = FALSE), error = function(e) NULL)
 } else {
   egresos <- NULL
 }
 
 if (file.exists(delitos_fp)) {
-  delitos <- read_csv(delitos_fp, show_col_types = FALSE)
+  delitos <- tryCatch(read_csv(delitos_fp, show_col_types = FALSE), error = function(e) NULL)
 } else {
   delitos <- NULL
 }
