@@ -75,5 +75,4 @@ La aplicación espera encontrar los siguientes archivos en `data/processed/`:
 
 ## Créditos
 
-Equipo de Desarrollo.
-Consultoría: Kesarleon AI
+[Kesarleon AI](https://preview--kesarleon-ai.lovable.app/)
